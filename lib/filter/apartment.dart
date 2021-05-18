@@ -4,10 +4,10 @@ class ApartPage extends StatefulWidget {
   ApartPage({Key key, this.title}) : super(key: key);
   final String title;
   @override
-  _ApartPagePageState createState() => _ApartPagePageState();
+  _ApartPageState createState() => _ApartPageState();
 }
 
-class _ApartPagePageState extends State<ApartPage> {
+class _ApartPageState extends State<ApartPage> {
   var isSelectLits = List.filled(14, false);
   var listofSelect = [
     '월세',

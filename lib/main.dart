@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +5,7 @@ import 'package:honeyroom/openAPI/JsonParseDemo.dart';
 import 'package:honeyroom/filter/villa.dart';
 import 'package:honeyroom/filter/apartment.dart';
 import 'package:honeyroom/filter/officetel.dart';
-import 'package:honeyroom/filter/information.dart';
+import 'package:honeyroom/filter/infoExam.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,17 +72,17 @@ class _HoneyRoomPageState extends State<HoneyRoomPage> {
           },
         ),
         ElevatedButton(
-          child: Text('상세정보', style: TextStyle(fontSize: 24)),
-          onPressed: () {
-            Navigator.push(
-                context, CupertinoPageRoute(builder: (context) => InfoPage()));
-          },
-        ),
-        ElevatedButton(
           child: Text('jsonDemo', style: TextStyle(fontSize: 24)),
           onPressed: () {
             Navigator.push(context,
                 CupertinoPageRoute(builder: (context) => JsonParseDemo()));
+          },
+        ),
+        ElevatedButton(
+          child: Text('상세정보', style: TextStyle(fontSize: 24)),
+          onPressed: () {
+            Navigator.push(context,
+                CupertinoPageRoute(builder: (context) => InfoExamPage()));
           },
         ),
       ]),

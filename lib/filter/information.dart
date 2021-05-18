@@ -1,12 +1,21 @@
+//import 'package:location/location.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:honeyroom/openAPI/Users.dart';
 import 'package:honeyroom/firestore/adminData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InfoPage extends StatefulWidget {
-  InfoPage({Key key, this.title}) : super(key: key);
+  InfoPage({Key key, this.title, this.id}) : super(key: key);
   final String title;
+  final String id;
+  static String generateLocationPreviewImage(
+      {double latitude, double longitude}) {
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyBjJS0R3g8LUziS9ucwWHmgQr4wXJvIXio';
+  }
+
   @override
   _InfoPageState createState() => _InfoPageState();
 }
@@ -19,161 +28,181 @@ final List<String> imgList = [
 ];
 
 class _InfoPageState extends State<InfoPage> {
-  List<User> _users;
-  bool _loading;
+  String _previewImageUrl;
 
-  //firebase 데이터 읽는 부분
-  @override
-  void initState() {
-    super.initState();
-    _loading = true;
-    ReadData.readData().then((users) {
-      setState(() {
-        _users = users;
-        _loading = false;
-      });
-    });
-  }
+/*Future<void> _getCurrentLocationData() async{
+  final locData = await Location().getLocation();
+  final staticImageUrl = LocationHelper.generateLocationPreviewImage(latitude: locData.latitude, longitude:locData.longitude);
+  setState(() {
+    _previewImageUrl = staticImageUrl;
+  });
+}*/
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext parentcontext) {
+    dynamic passdata = widget.id;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: _loading ? _printMenu("Loading...") : _printMenu("상세 정보"),
+        title: _printMenu("상세 정보"),
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.person), tooltip: '사용자 정보', onPressed: () {})
         ],
       ),
-      body: SingleChildScrollView(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-            Padding(padding: EdgeInsets.all(5.0)),
-            _printMenu('매물사진'),
-            _printImage(),
-            Padding(
-              padding: EdgeInsets.all(0),
-              child: Container(
-                color: Colors.black12,
-                height: 10,
-              ),
-            ),
-
-            _printMenu('매물정보'),
-            Padding(padding: EdgeInsets.all(10.0)),
-            // 데이터 출력 부분
-            Container(
-              height: 220,
-              child: ListView.builder(
-                  itemCount: null == _users ? 0 : 1,
-                  itemBuilder: (context, index) {
-                    User user = _users[index];
-                    addData(
-                        user.transactionAmount,
-                        user.constructionYear,
-                        user.year,
-                        user.address,
-                        user.apartment,
-                        user.month,
-                        user.date,
-                        user.squareMeasure,
-                        user.number,
-                        user.code,
-                        user.floor);
-                    return Column(children: <Widget>[
-                      Container(height: 1, color: Colors.black12),
-                      _printOption('거래금액', user.transactionAmount),
-                      Container(height: 1, color: Colors.black12),
-                      _printOption('건축년도', user.constructionYear),
-                      Container(height: 1, color: Colors.black12),
-                      _printOption('법정동', user.address),
-                      Container(height: 1, color: Colors.black12),
-                      _printOption('아파트', user.apartment),
-                      Container(height: 1, color: Colors.black12),
-                      _printOption('전용면적', user.squareMeasure),
-                      Container(height: 1, color: Colors.black12),
-                      _printOption('층', user.floor),
-                      Container(height: 1, color: Colors.black12),
-                    ]);
-                  }),
-            ),
-/*
-            Container(height: 1, color: Colors.black12),
-            _printOption('거래금액', '5000'),
-            Container(height: 1, color: Colors.black12),
-            _printOption('전용면적', '101'),
-            Container(height: 1, color: Colors.black12),
-            _printOption('층수', '11/20'),
-            Container(height: 1, color: Colors.black12),
-            _printOption('건축년도', '2009'),
-            Container(height: 1, color: Colors.black12),
-            Padding(padding: EdgeInsets.all(10.0)),
-*/
-            Padding(
-              padding: EdgeInsets.all(0),
-              child: Container(
-                color: Colors.black12,
-                height: 10,
-              ),
-            ),
-            _printMenu('편의시설'),
-            Padding(padding: EdgeInsets.all(10.0)),
-            Row(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[Icon(Icons.directions_bus), Text('버스정류장')],
-                ),
-                Padding(padding: EdgeInsets.all(5)),
-                Column(
-                  children: <Widget>[
-                    Icon(Icons.elevator_outlined),
-                    Text('엘레베이터')
-                  ],
-                ),
-                Padding(padding: EdgeInsets.all(5)),
-                Column(
-                  children: <Widget>[
-                    Icon(Icons.local_hospital_outlined),
-                    Text('병원')
-                  ],
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(0),
-              child: Container(
-                color: Colors.black12,
-                height: 10,
-              ),
-            ),
-            _printMenu('편의시설'),
-            Padding(padding: EdgeInsets.all(10.0)),
+      body: Container(
+        height: 750,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("아파트")
+              .doc("매매")
+              .collection("서울")
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return Text("Error: ${snapshot.error}");
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Text("Loading...");
+              default:
+                return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (context, index) {
+                      if (snapshot.data.docs[index].id == passdata) {
+                        return SingleChildScrollView(
+                            child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.all(5.0)),
+                              _printMenu('매물사진'),
+                              _printImage(),
+                              Padding(
+                                padding: EdgeInsets.all(0),
+                                child: Container(
+                                  color: Colors.black12,
+                                  height: 10,
+                                ),
+                              ),
+                              _printMenu('매물정보'),
+                              Padding(padding: EdgeInsets.all(10.0)),
+                              Container(height: 1, color: Colors.black12),
+                              _printInfo(
+                                  '아파트', snapshot.data.docs[index]["아파트"]),
+                              Container(height: 1, color: Colors.black12),
+                              _printInfo('전용면적',
+                                  "${snapshot.data.docs[index]["전용면적"]}"),
+                              Container(height: 1, color: Colors.black12),
+                              _printInfo(
+                                  '방개수', "${snapshot.data.docs[index]["방개수"]}"),
+                              Container(height: 1, color: Colors.black12),
+                              _printInfo(
+                                  '층', "${snapshot.data.docs[index]["층"]}"),
+                              Container(height: 1, color: Colors.black12),
+                              _printInfo('거래금액',
+                                  "${snapshot.data.docs[index]["거래금액"]}"),
+                              Container(height: 1, color: Colors.black12),
+                              _printInfo('건축년도',
+                                  "${snapshot.data.docs[index]["건축년도"]}"),
+                              Container(height: 1, color: Colors.black12),
+                              Padding(
+                                padding: EdgeInsets.all(0),
+                                child: Container(
+                                  color: Colors.black12,
+                                  height: 10,
+                                ),
+                              ),
+                              _printMenu('편의시설'),
+                              Padding(padding: EdgeInsets.all(10.0)),
+                              _printOption(
+                                  '주차', snapshot.data.docs[index]["주차"]),
+                              _printOption(
+                                  '반려견', snapshot.data.docs[index]["반려견"]),
+                              _printOption(
+                                  '엘리베이터', snapshot.data.docs[index]["엘리베이터"]),
+                              _printOption(
+                                  'CCTV', snapshot.data.docs[index]["CCTV"]),
+                              _printOption(
+                                  '현관보안', snapshot.data.docs[index]["현관보안"]),
+                              _printOption(
+                                  '경비원', snapshot.data.docs[index]["경비원"]),
+                              _printOption(
+                                  '인터폰', snapshot.data.docs[index]["인터폰"]),
+                              Padding(
+                                padding: EdgeInsets.all(0),
+                                child: Container(
+                                  color: Colors.black12,
+                                  height: 10,
+                                ),
+                              ),
+                              _printMenu('매물옵션'),
+                              Padding(padding: EdgeInsets.all(10.0)),
+                              _printOption(
+                                  '에어컨', snapshot.data.docs[index]["에어컨"]),
+                              _printOption(
+                                  '냉장고', snapshot.data.docs[index]["냉장고"]),
+                              _printOption(
+                                  '침대', snapshot.data.docs[index]["침대"]),
+                              _printOption(
+                                  '세탁기', snapshot.data.docs[index]["세탁기"]),
+                              _printOption(
+                                  '식기세척기', snapshot.data.docs[index]["식기세척기"]),
+                              _printOption(
+                                  '건조기', snapshot.data.docs[index]["건조기"]),
+                              _printOption(
+                                  '옷장', snapshot.data.docs[index]["옷장"]),
+                              _printOption(
+                                  '신발장', snapshot.data.docs[index]["신발장"]),
+                              _printOption(
+                                  '전자레인지', snapshot.data.docs[index]["전자레인지"]),
+                              _printOption(
+                                  '복층', snapshot.data.docs[index]["복층"]),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                height: 180,
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                child: _previewImageUrl == null
+                                    ? Text(
+                                        'No Location Chosen',
+                                        textAlign: TextAlign.center,
+                                      )
+                                    : Image.network(
+                                        _previewImageUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ));
+                      }
+                    });
+            }
+          },
+        ),
+      ),
+      //아이콘 형식
+      /*Row(
+          children: <Widget>[
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[Icon(Icons.directions_bus), Text('버스정류장')],
+            ),
+            Padding(padding: EdgeInsets.all(5)),
+            Column(
+              children: <Widget>[Icon(Icons.elevator_outlined), Text('엘레베이터')],
+            ),
+            Padding(padding: EdgeInsets.all(5)),
+            Column(
               children: <Widget>[
-                Text('버스정류장'),
-                Text('엘레베이터'),
-                Text('병원'),
-                Text('버스정류장'),
-                Text('엘레베이터'),
-                Text('병원'),
-                Text('버스정류장'),
-                Text('엘레베이터'),
-                Text('병원'),
+                Icon(Icons.local_hospital_outlined),
+                Text('병원')
               ],
             ),
-            Padding(
-              padding: EdgeInsets.all(0),
-              child: Container(
-                color: Colors.black12,
-                height: 10,
-              ),
-            ),
-          ])),
+          ],
+        ),*/
     );
   }
 
@@ -185,7 +214,7 @@ class _InfoPageState extends State<InfoPage> {
     )));
   }
 
-  Widget _printOption(var n, var m) {
+  Widget _printInfo(var n, var m) {
     return (Row(
       children: <Widget>[
         Container(
@@ -230,5 +259,16 @@ class _InfoPageState extends State<InfoPage> {
         ),
       ),
     ));
+  }
+}
+
+Widget _printOption(var n, bool m) {
+  if (m) {
+    return (Container(
+        child: Center(
+      child: (Text(n, style: TextStyle(fontSize: 20))),
+    )));
+  } else {
+    return (Container());
   }
 }

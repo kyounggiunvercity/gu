@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'testPage.dart';
+import 'filter.dart';
+import 'package:flutter/cupertino.dart';
 
 class VillaPage extends StatefulWidget {
   VillaPage({Key key, this.title}) : super(key: key);
@@ -8,28 +11,41 @@ class VillaPage extends StatefulWidget {
 }
 
 class _VillaPageState extends State<VillaPage> {
-  var isSelectLits = List.filled(14, false);
+  @override
+  List<Filter> filter_villa;
+  var isSelectLits = List.filled(30, false);
   var listofSelect = [
     '월세',
     '전세',
     '매매',
     '원룸',
     '투룸+',
-    '조건1',
-    '조건2',
-    '조건3',
-    '조건4',
-    '조건5',
-    '조건6',
-    '조건7',
-    '조건8'
+    '주차가능',
+    '반려견',
+    '엘레베이터',
+    'CCTV',
+    '현관보안',
+    '경비원',
+    '인터폰',
+    '에어컨',
+    '냉장고',
+    '침대',
+    '옷장',
+    '신발장',
+    '세탁기',
+    '건조기',
+    '식기세척기',
+    '전자레인지',
+    '복층'
   ];
+
   var backColor = Colors.lightBlue[50];
   var pontColor = Colors.black;
   RangeValues priceRange = const RangeValues(0, 100);
   RangeValues depositRange = const RangeValues(0, 10000);
   @override
   Widget build(BuildContext context) {
+    for (var i in listofSelect) {}
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -50,7 +66,8 @@ class _VillaPageState extends State<VillaPage> {
               })
         ],
       ),
-      body: Column(children: <Widget>[
+      body: SingleChildScrollView(
+          child: Column(children: <Widget>[
         _printMenu("거래 유형"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -128,7 +145,7 @@ class _VillaPageState extends State<VillaPage> {
           divisions: 10,
         ),
         Padding(padding: EdgeInsets.all(10.0)),
-        _printMenu("세부 조건"),
+        _printMenu("편의 시설"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -140,17 +157,38 @@ class _VillaPageState extends State<VillaPage> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[_selectMenu(9), _selectMenu(10), _selectMenu(11)],
+        ),
+        Padding(padding: EdgeInsets.all(10.0)),
+        _printMenu("세부 옵션"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _selectMenu(9),
-            _selectMenu(10),
-            _selectMenu(11),
             _selectMenu(12),
+            _selectMenu(13),
+            _selectMenu(14),
+            _selectMenu(15),
           ],
         ),
-      ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _selectMenu(16),
+            _selectMenu(17),
+            _selectMenu(18),
+            _selectMenu(19),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[_selectMenu(20), _selectMenu(21)],
+        ),
+        Padding(padding: EdgeInsets.all(50.0)),
+      ])),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _clickMe();
+          Navigator.push(
+              context, CupertinoPageRoute(builder: (context) => TestPage()));
         },
         tooltip: '선택된 내용으로 검색을 시작합니다.',
         backgroundColor: Colors.yellow[600],
@@ -168,24 +206,26 @@ class _VillaPageState extends State<VillaPage> {
   Widget _selectMenu(var n) {
     if (isSelectLits[n]) {
       return (ElevatedButton(
-          child: Text(listofSelect[n], style: TextStyle(fontSize: 24)),
+          child: Text(listofSelect[n], style: TextStyle(fontSize: 13)),
           onPressed: () {
             setState(() {
               isSelectLits[n] = !isSelectLits[n];
             });
           },
           style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(Size(92, 35)),
               foregroundColor: MaterialStateProperty.all(Colors.brown[800]),
               backgroundColor: MaterialStateProperty.all(Colors.yellow[600]))));
     } else {
       return (OutlinedButton(
-          child: Text(listofSelect[n], style: TextStyle(fontSize: 24)),
+          child: Text(listofSelect[n], style: TextStyle(fontSize: 13)),
           onPressed: () {
             setState(() {
               isSelectLits[n] = !isSelectLits[n];
             });
           },
           style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(Size(92, 35)),
               foregroundColor: MaterialStateProperty.all(Colors.brown[800]))));
     }
   }

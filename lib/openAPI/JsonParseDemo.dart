@@ -49,7 +49,7 @@ class _JsonParseDemoState extends State<JsonParseDemo> {
       body: Container(
         color: Colors.white,
         child: ListView.builder(
-            itemCount: null == _users ? 0 : 2,
+            itemCount: null == _users ? 0 : 1,
             itemBuilder: (context, index) {
               User user = _users[index];
               //데이터를 firebase에 추가하는 부분
