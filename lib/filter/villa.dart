@@ -13,7 +13,7 @@ class VillaPage extends StatefulWidget {
 class _VillaPageState extends State<VillaPage> {
   @override
   List<Filter> filter_villa;
-  var isSelectLits = List.filled(30, false);
+  var isSelectLits = List.filled(50, false);
   var listofSelect = [
     '월세',
     '전세',
@@ -36,7 +36,31 @@ class _VillaPageState extends State<VillaPage> {
     '건조기',
     '식기세척기',
     '전자레인지',
-    '복층'
+    '복층',
+    '~ 10평',
+    '10평대',
+    '20평대',
+    '30평대',
+    '40평대',
+    '50평대',
+    '60평대',
+    '70평 ~',
+    '지하',
+    '저층',
+    '중간충',
+    '고층',
+    '1개',
+    '2개',
+    '3개',
+    '4개이상',
+    '1개',
+    '2개',
+    '3개',
+    '4개이상',
+    '~ 5년',
+    '~ 10년',
+    '~ 15년',
+    '15년 ~',
   ];
 
   var backColor = Colors.lightBlue[50];
@@ -49,14 +73,8 @@ class _VillaPageState extends State<VillaPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: _printMenu("빌라"),
+        title: _printMenu("필터"),
         elevation: 0.0,
-        /*leading: IconButton(
-            icon: Image.asset('assets/images/RoomGo.png'),
-            tooltip: '메뉴',
-            onPressed: () {
-              _clickMe();
-            }),*/
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.person),
@@ -72,26 +90,6 @@ class _VillaPageState extends State<VillaPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            /*ElevatedButton(
-                child: Text('월세', style: TextStyle(fontSize: 24)),
-                onPressed: () {
-                  setState(() {
-                    backColor = (backColor == Colors.lightBlue[50])
-                        ? Colors.lightBlue
-                        : Colors.lightBlue[50];
-                    pontColor = (backColor == Colors.lightBlue[50])
-                        ? Colors.black
-                        : Colors.white;
-                  });
-                },
-                style: ButtonStyle(backgroundColor:
-                    MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed))
-                    return Colors.lightBlue[50];
-                  else
-                    return Colors.lightBlue;
-                }))),
-*/
             _selectMenu(0),
             _selectMenu(1),
             _selectMenu(2),
@@ -104,6 +102,26 @@ class _VillaPageState extends State<VillaPage> {
           children: <Widget>[
             _selectMenu(3),
             _selectMenu(4),
+          ],
+        ),
+        Padding(padding: EdgeInsets.all(10.0)),
+        _printMenu("면적"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _selectMenu(22),
+            _selectMenu(23),
+            _selectMenu(24),
+            _selectMenu(25),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _selectMenu(26),
+            _selectMenu(27),
+            _selectMenu(28),
+            _selectMenu(29),
           ],
         ),
         Padding(padding: EdgeInsets.all(10.0)),
@@ -144,6 +162,55 @@ class _VillaPageState extends State<VillaPage> {
           max: 10000,
           divisions: 10,
         ),
+        Padding(padding: EdgeInsets.all(10.0)),
+        Container(
+            child: Column(
+          children: <Widget>[
+            _printMenu("층수"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _selectMenu(30),
+                _selectMenu(31),
+                _selectMenu(32),
+                _selectMenu(33),
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(10.0)),
+            _printMenu("방개수"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _selectMenu(34),
+                _selectMenu(35),
+                _selectMenu(36),
+                _selectMenu(37),
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(10.0)),
+            _printMenu("화장실"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _selectMenu(38),
+                _selectMenu(39),
+                _selectMenu(40),
+                _selectMenu(41),
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(10.0)),
+            _printMenu("건축년도"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _selectMenu(42),
+                _selectMenu(43),
+                _selectMenu(44),
+                _selectMenu(45),
+              ],
+            ),
+          ],
+        )),
         Padding(padding: EdgeInsets.all(10.0)),
         _printMenu("편의 시설"),
         Row(
