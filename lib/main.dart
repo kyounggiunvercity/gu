@@ -18,7 +18,7 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Colors.yellow[600],
+        primaryColor: Colors.brown[600],
       ),
       home: HoneyRoomPage(),
     );

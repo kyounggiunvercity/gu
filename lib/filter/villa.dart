@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'testPage.dart';
-import 'filter.dart';
 import 'package:flutter/cupertino.dart';
 
 class VillaPage extends StatefulWidget {
@@ -12,7 +11,6 @@ class VillaPage extends StatefulWidget {
 
 class _VillaPageState extends State<VillaPage> {
   @override
-  List<Filter> filter_villa;
   var isSelectLits = List.filled(50, false);
   var listofSelect = [
     '월세',
@@ -133,8 +131,8 @@ class _VillaPageState extends State<VillaPage> {
               priceRange = values;
             });
           },
-          activeColor: Colors.yellow[600],
-          inactiveColor: Colors.yellow[200],
+          activeColor: Colors.brown[600],
+          inactiveColor: Colors.brown[200],
           labels: RangeLabels(
             priceRange.start.round().toString(),
             priceRange.end.round().toString(),
@@ -152,8 +150,8 @@ class _VillaPageState extends State<VillaPage> {
               depositRange = values;
             });
           },
-          activeColor: Colors.yellow[600],
-          inactiveColor: Colors.yellow[200],
+          activeColor: Colors.brown[600],
+          inactiveColor: Colors.brown[200],
           labels: RangeLabels(
             depositRange.start.round().toString(),
             depositRange.end.round().toString(),
@@ -258,14 +256,14 @@ class _VillaPageState extends State<VillaPage> {
               context, CupertinoPageRoute(builder: (context) => TestPage()));
         },
         tooltip: '선택된 내용으로 검색을 시작합니다.',
-        backgroundColor: Colors.yellow[600],
+        backgroundColor: Colors.brown[600],
         label: Text('선택한 조건으로 검색',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.brown[800],
+                color: Colors.yellow[600],
                 fontSize: 15)),
         icon: Icon(Icons.search),
-        foregroundColor: Colors.brown[800],
+        foregroundColor: Colors.yellow[600],
       ),
     );
   }
@@ -281,8 +279,8 @@ class _VillaPageState extends State<VillaPage> {
           },
           style: ButtonStyle(
               minimumSize: MaterialStateProperty.all(Size(92, 35)),
-              foregroundColor: MaterialStateProperty.all(Colors.brown[800]),
-              backgroundColor: MaterialStateProperty.all(Colors.yellow[600]))));
+              foregroundColor: MaterialStateProperty.all(Colors.yellow[600]),
+              backgroundColor: MaterialStateProperty.all(Colors.brown[600]))));
     } else {
       return (OutlinedButton(
           child: Text(listofSelect[n], style: TextStyle(fontSize: 13)),
@@ -293,7 +291,7 @@ class _VillaPageState extends State<VillaPage> {
           },
           style: ButtonStyle(
               minimumSize: MaterialStateProperty.all(Size(92, 35)),
-              foregroundColor: MaterialStateProperty.all(Colors.brown[800]))));
+              foregroundColor: MaterialStateProperty.all(Colors.black))));
     }
   }
 
